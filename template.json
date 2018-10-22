@@ -1,0 +1,128 @@
+{
+  "variables": {
+    "user": "root",
+    "password": "r00tme",
+    "images_cache": "{{ env `PACKER_IMAGES_CACHE` }}",
+    "disk_size": "50000",
+    "do_api_token": "{{ env `DO_API_TOKEN` }}",
+    "image_name": "{{ env `IMAGE_NAME` }}",
+    "cluster_model": "{{ env `CLUSTER_MODEL` }}",
+    "cluster_model_ref": "{{ env `CLUSTER_MODEL_REF` }}",
+    "cluster_name": "{{ env `CLUSTER_NAME` }}",
+    "bs_hostname": "cfg01",
+    "formula_version": "{{ env `FORMULA_VERSION` }}",
+    "mcp_version": "{{ env `MCP_VERSION` }}",
+    "ubuntu_baseurl": "{{ env `UBUNTU_BASEURL` }}",
+    "saltstack_gpg": "{{ env `SALTSTACK_GPG` }}",
+    "saltstack_repo": "{{ env `SALTSTACK_REPO` }}",
+    "apt_mirantis_gpg": "{{ env `APT_MIRANTIS_GPG` }}",
+    "apt_mirantis_salt_repo": "{{ env `APT_MIRANTIS_SALT_REPO` }}",
+    "git_salt_formulas_scripts": "{{ env `GIT_SALT_FORMULAS_SCRIPTS` }}",
+    "apt_repository": "{{ env `APT_REPOSITORY` }}",
+    "apt_repository_gpg": "{{ env `APT_REPOSITORY_GPG` }}"
+
+  },
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "files/root/",
+      "destination": "/root"
+    },
+    {
+      "type": "file",
+      "source": "files/tmp/bootstrap.saltstack.com.sh",
+      "destination": "/tmp/bootstrap.saltstack.com.sh"
+    },
+    {
+      "environment_vars": [
+        "CLUSTER_MODEL={{ user `cluster_model` }}",
+        "CLUSTER_MODEL_REF={{ user `cluster_model_ref` }}",
+        "CLUSTER_NAME={{ user `cluster_name` }}",
+        "BS_HOSTNAME={{ user `bs_hostname` }}",
+        "FORMULA_VERSION={{ user `formula_version` }}",
+        "UBUNTU_BASEURL={{ user `ubuntu_baseurl` }}",
+        "SALTSTACK_GPG={{ user `saltstack_gpg` }}",
+        "SALTSTACK_REPO={{ user `saltstack_repo` }}",
+        "APT_MIRANTIS_GPG={{ user `apt_mirantis_gpg` }}",
+        "APT_MIRANTIS_SALT_REPO={{ user `apt_mirantis_salt_repo` }}",
+        "GIT_SALT_FORMULAS_SCRIPTS={{ user `git_salt_formulas_scripts` }}",
+        "APT_REPOSITORY={{ user `apt_repository` }}",
+        "APT_REPOSITORY_GPG={{ user `apt_repository_gpg` }}",
+        "APT_MIRANTIS_SALT_REPO={{ user `apt_mirantis_salt_repo` }}",
+        "PACKER_OFFLINE_BUILD=true"
+      ],
+      "type": "shell",
+      "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} {{ .Path }}",
+      "scripts": [
+        "scripts/base_set_hostname.sh",
+        "scripts/base.sh",
+        "scripts/motd.sh",
+        "scripts/network.sh",
+        "scripts/salt_bootstrap.sh",
+        "scripts/reboot.sh",
+        "scripts/salt.sh"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "files/var/maas",
+      "destination": "/var/lib/maas/.maas_login.sh"
+    },
+    {
+      "environment_vars": [
+        "HOME=/root",
+        "MCP_VERSION={{ user `mcp_version` }}"
+      ],
+      "type": "shell",
+      "pause_before": "10s",
+      "scripts": [
+        "scripts/security.sh",
+        "scripts/info.sh",
+        "scripts/zerodisk.sh"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "files/etc/",
+      "destination": "/etc"
+    }
+  ],
+  "builders": [
+    {
+      "type": "qemu",
+      "qemuargs": [
+        [
+          "-m",
+          "8096M"
+        ],
+        [
+          "-fda",
+          "config-drive/cloudata.iso"
+        ],
+        [
+          "-smp",
+          "4"
+        ]
+      ],
+      "vm_name": "{{ user `image_name` }}-{{ isotime \"200601021504\"  }}",
+      "output_directory": "images/{{ user `image_name` }}-qemu-{{ isotime \"200601021504\"  }}",
+      "format": "qcow2",
+      "disk_compression": true,
+      "iso_checksum": "566efef1d6f12e7d3a994c2405bdb642",
+      "iso_checksum_type": "md5",
+      "iso_url": "http://cloud-images.ubuntu.com/releases/xenial/release-20180306/ubuntu-16.04-server-cloudimg-amd64-disk1.img",
+      "iso_target_path": "{{ user `images_cache`}}/release-20180306_xenial-server-cloudimg-amd64-disk1.img",
+      "disk_image": true,
+      "accelerator": "kvm",
+      "disk_size": "{{ user `disk_size`}}",
+      "headless": true,
+      "ssh_username": "{{user `user`}}",
+      "ssh_password": "{{user `password`}}",
+      "ssh_host_port_min": 7000,
+      "ssh_host_port_max": 7050,
+      "shutdown_command": "shutdown -P now",
+      "boot_wait": "2s",
+      "ssh_wait_timeout": "360s"
+    }
+  ]
+}

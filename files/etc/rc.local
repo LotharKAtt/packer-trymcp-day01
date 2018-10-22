@@ -1,0 +1,19 @@
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+if [ ! -f /tmp/bootstrap_interfaces ] && [ -d /srv/salt/reclass/nodes/_generated ]; then
+  sed -i "s/single_address:.*/single_address: $(hostname -I | cut -d ' ' -f 1)/g" /srv/salt/reclass/nodes/cfg01.*
+  touch /tmp/bootstrap_interfaces
+fi
+
+exit 0

@@ -1,0 +1,21 @@
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+auto ens3
+iface ens3 inet static
+  address $SALT_MASTER_DEPLOY_IP
+  netmask $DEPLOY_NETWORK_NETMASK
+  gateway $DEPLOY_NETWORK_GW
+  mtu $DEPLOY_NETWORK_MTU
+  dns-nameservers $DNS_SERVERS
+#auto ens4
+#iface ens4 inet static
+#  address $SALT_MASTER_CONTROL_IP
+#  netmask $SALT_MASTER_CONTROL_NETMASK

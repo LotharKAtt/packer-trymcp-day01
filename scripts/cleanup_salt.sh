@@ -1,0 +1,1 @@
+../../common/ubuntu_cleanup_salt.sh

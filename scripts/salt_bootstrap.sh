@@ -1,0 +1,1 @@
+../../common/ubuntu_salt_bootstrap.sh

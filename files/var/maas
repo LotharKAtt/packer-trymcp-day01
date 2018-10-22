@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Change these 3 values as required 
+PROFILE=mirantis
+API_KEY_FILE=/var/lib/maas/.maas_credentials
+API_SERVER=localhost
+
+MAAS_URL=http://$API_SERVER/MAAS/api/2.0
+
+maas login $PROFILE $MAAS_URL - < $API_KEY_FILE

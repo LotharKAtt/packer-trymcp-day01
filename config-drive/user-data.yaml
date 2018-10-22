@@ -1,0 +1,18 @@
+#cloud-config
+debug: True
+ssh_pwauth: True
+disable_root: false
+chpasswd:
+  list: |
+    root:r00tme
+#    root:ho5uo7Uome5d
+#    cloud-user:r00tme
+  expire: False
+output: {all: '| tee -a /var/log/cloud-init-output.log'}
+runcmd:
+  - sed -i'.orig' -e's/PermitRootLogin.*/PermitRootLogin yes/g' -e's/PasswordAuthentication.*/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+  - service sshd restart
+# speed up resolving, and not stuck on timeouts. One-shot changes
+  - echo 'options timeout:1 attempts:4' >> /etc/resolv.conf
+  - echo 'nameserver 172.18.208.44' >> /etc/resolvconf/resolv.conf.d/base
+  - resolvconf -u
