@@ -18,13 +18,13 @@ export CLUSTER_MODEL_REF=master
 export MCP_VERSION=proposed
 export SCRIPTS_REF=master
 export CLUSTER_NAME=try-mcp
-export FORMULA_VERSION=proposed
+export FORMULA_VERSION=nightly
 export BINARY_MCP_VERSION=proposed
 export UBUNTU_BASEURL="http://mirror.mirantis.com/proposed/ubuntu/"
 export SALTSTACK_REPO="http://mirror.mirantis.com/proposed/saltstack-2017.7/xenial xenial main"
 export APT_MIRANTIS_GPG="http://apt.mirantis.com/public.gpg"
 export SALTSTACK_GPG="https://repo.saltstack.com/apt/ubuntu/16.04/amd64/2017.7/SALTSTACK-GPG-KEY.pub"
-export APT_MIRANTIS_SALT_REPO="http://apt.mirantis.com/xenial/ proposed salt"
+export APT_MIRANTIS_SALT_REPO="http://apt.mirantis.com/xenial/ nightly salt"
 export GIT_SALT_FORMULAS_SCRIPTS=https://github.com/salt-formulas/salt-formulas-scripts.git
 export APT_REPOSITORY="deb [arch=amd64] http://apt.mirantis.com/xenial/ proposed salt"
 export APT_REPOSITORY_GPG=http://apt.mirantis.com/public.gpg

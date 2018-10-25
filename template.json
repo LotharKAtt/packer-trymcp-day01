@@ -59,7 +59,6 @@
         "scripts/motd.sh",
         "scripts/network.sh",
         "scripts/salt_bootstrap.sh",
-        "scripts/reboot.sh",
         "scripts/salt.sh"
       ]
     },

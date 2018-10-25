@@ -1,4 +1,6 @@
 #!/bin/bash -xe
+apt-get update
+apt-get -y install linux-image-extra-$(uname -r)
 
 FORMULA_VERSION=${FORMULA_VERSION:-2018.3.1}
 APT_MIRANTIS_SALT_REPO=${APT_MIRANTIS_SALT_REPO:-"http://apt.mirantis.com/xenial/ $FORMULA_VERSION salt"}
@@ -18,35 +20,27 @@ salt-call ${SALT_OPTS} state.sls linux.network
 salt-call ${SALT_OPTS} state.sls openssh
 salt-call ${SALT_OPTS} state.sls salt.minion.ca
 sleep 20
-echo "Minion CA"
 salt-call ${SALT_OPTS} state.sls salt.minion.cert
-echo "Minion Cert"
-sleep 20
 salt-call ${SALT_OPTS} state.sls salt
-echo "Minion pure salt"
+salt-call ${SALT_OPTS} state.sls keycloak #
 sleep 20
 #SWARM
 #peklo
 sleep 20
 salt-call ${SALT_OPTS} state.sls docker.host
-salt-call ${SALT_OPTS} state.sls docker.swarm
-salt-call ${SALT_OPTS} mine.flush
-salt-call ${SALT_OPTS} mine.update
 salt-call ${SALT_OPTS} saltutil.sync_all
-
-sleep 20
-salt-call ${SALT_OPTS} state.sls docker.swarm
-echo "Swarm 2"
-sleep 20
-CICD
-salt-call ${SALT_OPTS} state.sls nginx
-sleep 25
-salt-call ${SALT_OPTS} state.sls docker.client
-echo "docker client1"
-sleep 60
-salt-call ${SALT_OPTS} state.sls openldap
-sleep 5
-salt-call ${SALT_OPTS} state.sls gerrit
-sleep 5
-salt-call ${SALT_OPTS} state.sls gerrit
-salt-call ${SALT_OPTS} state.sls jenkins
+#sleep 800
+docker pull docker-prod-local.artifactory.mirantis.com/mirantis/cicd/mysql:2018.8.0
+docker pull docker-prod-local.artifactory.mirantis.com/mirantis/cicd/gerrit:2018.8.0
+docker pull docker-prod-local.artifactory.mirantis.com/mirantis/cicd/jenkins:2018.8.0
+docker pull docker-prod-local.artifactory.mirantis.com/mirantis/cicd/jnlp-slave:2018.8.0
+docker pull docker-prod-local.artifactory.mirantis.com/mirantis/cicd/jnlp-slave:2018.8.0
+docker pull docker-prod-local.artifactory.mirantis.com/mirantis/cicd/jnlp-slave:2018.8.0
+docker pull docker-prod-local.artifactory.mirantis.com/mirantis/cicd/phpldapadmin:2018.8.0
+docker pull jboss/keycloak:4.5.0.Final
+docker pull jboss/keycloak-proxy:3.4.2.Final
+docker pull mirantis/python-operations-api:latest
+docker pull cockroachdb/cockroach:latest
+echo "---------------------"
+docker images
+echo "---------------------"
