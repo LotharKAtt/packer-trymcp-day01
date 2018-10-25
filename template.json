@@ -29,6 +29,23 @@
       "destination": "/root"
     },
     {
+      "environment_vars": [
+        "UBUNTU_BASEURL={{ user `ubuntu_baseurl` }}",
+        "SALTSTACK_REPO={{ user `saltstack_repo` }}",
+        "PACKER_OFFLINE_BUILD=true"
+      ],
+      "type": "shell",
+      "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} {{ .Path }}",
+      "expect_disconnect": "true",
+      "scripts": [
+        "scripts/base_set_hostname.sh",
+        "scripts/base.sh",
+        "scripts/motd.sh",
+        "scripts/network.sh",
+        "scripts/reboot.sh"
+      ]
+    },
+    {
       "type": "file",
       "source": "files/tmp/bootstrap.saltstack.com.sh",
       "destination": "/tmp/bootstrap.saltstack.com.sh"
@@ -40,7 +57,6 @@
         "CLUSTER_NAME={{ user `cluster_name` }}",
         "BS_HOSTNAME={{ user `bs_hostname` }}",
         "FORMULA_VERSION={{ user `formula_version` }}",
-        "UBUNTU_BASEURL={{ user `ubuntu_baseurl` }}",
         "SALTSTACK_GPG={{ user `saltstack_gpg` }}",
         "SALTSTACK_REPO={{ user `saltstack_repo` }}",
         "APT_MIRANTIS_GPG={{ user `apt_mirantis_gpg` }}",
@@ -52,12 +68,10 @@
         "PACKER_OFFLINE_BUILD=true"
       ],
       "type": "shell",
+      "pause_before": "60s",
       "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} {{ .Path }}",
+      "expect_disconnect": "true",
       "scripts": [
-        "scripts/base_set_hostname.sh",
-        "scripts/base.sh",
-        "scripts/motd.sh",
-        "scripts/network.sh",
         "scripts/salt_bootstrap.sh",
         "scripts/salt.sh"
       ]
