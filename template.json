@@ -48,7 +48,7 @@
     {
       "type": "file",
       "source": "files/tmp/bootstrap.saltstack.com.sh",
-      "destination": "/tmp/bootstrap.saltstack.com.sh"
+      "destination": "/opt/bootstrap.saltstack.com.sh"
     },
     {
       "environment_vars": [
