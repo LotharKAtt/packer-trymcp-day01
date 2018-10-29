@@ -31,7 +31,7 @@ docker pull jboss/keycloak:4.5.0.Final
 docker pull jboss/keycloak-proxy:3.4.2.Final
 docker pull mirantis/python-operations-api:latest
 docker pull cockroachdb/cockroach:latest
-docekr pull mirantis/operations-ui:latest
+docker pull mirantis/operations-ui:latest
 echo "---------------------"
 docker images
 echo "---------------------"
